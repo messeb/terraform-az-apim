@@ -1,0 +1,22 @@
+name: Terraform
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+  release:
+    types: [published]
+
+env:
+  TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+
+jobs:
+  check-format:
+    runs-on: ubuntu-latest
+    container: hashicorp/terraform
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive -diff
