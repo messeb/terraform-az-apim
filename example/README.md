@@ -6,7 +6,7 @@ Creates example APIM instance.
 
 ```hcl
 module "apim" {
-  source = "https://github.com/messeb/terraform-az-apim"
+  source = "github.com/messeb/terraform-az-apim.git"
 
   resource_group_name = "az-api-management"
   resources_base_name = "az-api-management"
