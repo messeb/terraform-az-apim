@@ -46,6 +46,10 @@ module "apim" {
 }
 ```
 
+## Example
+
+[Example Usage](example/)
+
 ## Resources
 
 | Name | Type |
