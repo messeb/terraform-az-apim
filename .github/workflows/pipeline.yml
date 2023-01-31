@@ -57,18 +57,27 @@ jobs:
 
   infracost:
     runs-on: ubuntu-latest
-    name: Show infracost diff
-    strategy:
-      matrix: {
-        dir: ['example']
-      }
+    name: Show infracost
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
-      - name: Run infracost diff
-        uses: infracost/infracost-gh-action@master
-        env:
-          INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Infracost
+        uses: infracost/actions/setup@v2
         with:
-          path: ${{ matrix.dir }}
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+      - name: Generate Infracost cost estimate baseline
+        run: |
+          infracost breakdown --path=. \
+                              --usage-file=infracost-usage.yml \
+                              --format=json \
+                              --out-file=/tmp/infracost.json
+      - name: Post Infracost comment
+        run: |
+            infracost comment github --path=/tmp/infracost.json \
+                                     --repo=$GITHUB_REPOSITORY \
+                                     --github-token=${{github.token}} \
+                                     --pull-request=${{github.event.pull_request.number}} \
+                                     --behavior=delete-and-new
