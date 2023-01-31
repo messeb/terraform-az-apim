@@ -1,0 +1,8 @@
+version: 0.1
+resource_usage:
+  azurerm_api_management.apim:
+    monthly_api_calls: 1000000
+  azurerm_application_insights.api-insights:
+    monthly_data_ingested_gb: 1.0
+  azurerm_cdn_endpoint.apim-endpoint:
+    monthly_outbound_gb: 10
